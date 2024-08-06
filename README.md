@@ -1,2 +1,3 @@
 # next_xtred_bot
-aiogram
+Telegram Bot на Aiogram.
+Для получения информации  использует API запросы

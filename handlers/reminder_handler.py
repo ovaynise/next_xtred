@@ -22,81 +22,81 @@ from utils.security import crypt
 reminder_router = Router()
 common_filters = [
     ChatTypesFilter(['group', 'supergroup', 'channel', 'private']),
-    UserLevelFilter(0, 15, "IsAuthUser")
+    UserLevelFilter(0, 15, 'IsAuthUser')
 ]
 
 
 REMINDER_KB = get_keyboard(
-    "▶️ Запустить напоминание",
-    "⏸ Остановить напоминание",
-    "▪ Создать напоминание",
-    "▪ Показать все Ваши напоминания",
-    "🗑 Удалить напоминание",
-    "⭕️ Выход",
-    placeholder="Выберите действие",
+    '▶️ Запустить напоминание',
+    '⏸ Остановить напоминание',
+    '▪ Создать напоминание',
+    '▪ Показать все Ваши напоминания',
+    '🗑 Удалить напоминание',
+    '⭕️ Выход',
+    placeholder='Выберите действие',
     sizes=(2, 2, 2),
 )
 
 
-EXIT_KB = get_keyboard("⭕️ Выход", sizes=(2, 1, 1),)
+EXIT_KB = get_keyboard('⭕️ Выход', sizes=(2, 1, 1),)
 
 
-@reminder_router.message(F.text == "⭕️ Выход")
+@reminder_router.message(F.text == '⭕️ Выход')
 async def exit_keyboard(message: types.Message, state: FSMContext):
     await message.answer(
-        "Вы вышли из меню.",
+        'Вы вышли из меню.',
         reply_markup=types.ReplyKeyboardRemove()
     )
     await state.clear()
 
 
-@reminder_router.message(Command("reminder"))
+@reminder_router.message(Command('reminder'))
 async def get_bat(message: types.Message, bot: Bot):
     chat_type = message.chat.type
     await message.delete()
 
     if message.text in [
-        "▪ Создать напоминание",
-        "▪ Показать все Ваши напоминания",
-        "🗑 Удалить напоминание"
+        '▪ Создать напоминание',
+        '▪ Показать все Ваши напоминания',
+        '🗑 Удалить напоминание'
     ]:
         await bot.send_message(
             message.from_user.id,
-            "Что Вы хотите выполнить?",
+            'Что Вы хотите выполнить?',
             reply_markup=REMINDER_KB
         )
         bot_logger.info(f'🔢Запущено создание напоминания')
     elif message.text in [
-        "▶️ Запустить напоминание",
-        "⏸ Остановить напоминание"
+        '▶️ Запустить напоминание',
+        '⏸ Остановить напоминание'
     ]:
         await bot.send_message(
             message.from_user.id,
-            "Приступим к выполнению:",
+            'Приступим к выполнению:',
             reply_markup=REMINDER_KB
         )
         bot_logger.info(f'🔢Запущено выполнение напоминания')
     elif chat_type in ['group', 'supergroup']:
-        await bot.send_chat_action(message.chat.id, "typing")
+        await bot.send_chat_action(message.chat.id, 'typing')
         await bot.send_message(
             message.from_user.id,
-            "Приступим к созданию:",
+            'Приступим к созданию:',
             reply_markup=REMINDER_KB
         )
         bot_logger.info(f'🔢Запущено создание напоминания в групповом чате')
     else:
         await bot.send_message(
             message.from_user.id,
-            "Что Вы хотите выполнить?",
+            'Что Вы хотите выполнить?',
             reply_markup=REMINDER_KB
         )
         bot_logger.info(f'🔢Запущено создание напоминания в личном чате')
 
 
-@reminder_router.message(F.text == "▪ Создать напоминание")
+@reminder_router.message(F.text == '▪ Создать напоминание')
 async def add_reminder(message: types.Message, state: FSMContext):
     await add_name_reminder(message, state)
-    await message.answer("___________", reply_markup=EXIT_KB)
+    await message.answer('___________', reply_markup=EXIT_KB)
 
 
 async def add_name_reminder(message: types.Message, state: FSMContext):
@@ -141,7 +141,6 @@ async def choose_time(message: types.Message, state: FSMContext):
     )
 
 
-
 @reminder_router.message(ReminderForm.add_db_reminder_time)
 async def add_db_reminder_time(message: types.Message, state: FSMContext):
     await state.set_state(ReminderForm.choose_time)
@@ -150,18 +149,18 @@ async def add_db_reminder_time(message: types.Message, state: FSMContext):
         data = await state.get_data()
 
         api_data = {
-            "reminder_nickname": '',
-            "name_reminder": '',
-            "text_reminder": '',
-            "days_repeat": {
-                "days_week": [],
-                "month_days": [],
-                "time_repeat": []
+            'reminder_nickname': '',
+            'name_reminder': '',
+            'text_reminder': '',
+            'days_repeat': {
+                'days_week': [],
+                'month_days': [],
+                'time_repeat': []
             },
-            "owner_reminder_id": ''
+            'owner_reminder_id': ''
         }
 
-        nickname = (str(message.from_user.first_name) + " "
+        nickname = (str(message.from_user.first_name) + ' '
                     + str(message.from_user.last_name))
         api_data['reminder_nickname'] = data.get('name_reminder', 'не указано')
         api_data['name_reminder'] = data.get(
@@ -182,7 +181,7 @@ async def add_db_reminder_time(message: types.Message, state: FSMContext):
         reminder = await api_ov_client.post(endpoint_reminder, api_data)
         today = datetime.utcnow()
         await message.answer(
-            "Напоминание успешно создано",
+            'Напоминание успешно создано',
             reply_markup=REMINDER_KB
         )
         await state.clear()
@@ -203,22 +202,22 @@ async def add_db_reminder_time(message: types.Message, state: FSMContext):
         await message.answer(f'Произошла ошибка при добавлении объекта: {e}')
 
 
-@reminder_router.message(F.text == "▪ Показать все Ваши напоминания")
+@reminder_router.message(F.text == '▪ Показать все Ваши напоминания')
 async def show_reminders(message: types.Message, bot: Bot):
     await message.delete()
     try:
         reminders_response = await api_ov_client.get(
-            f"{endpoint_reminder}?owner_reminder_id={crypt(message.from_user.id)}")
-        if reminders_response and reminders_response.get("results"):
-            reminders = reminders_response["results"]
-            bot_message = "⬇️Список всех ваших напоминаний:⬇️\n\n"
+            f'{endpoint_reminder}?owner_reminder_id={crypt(message.from_user.id)}')
+        if reminders_response and reminders_response.get('results'):
+            reminders = reminders_response['results']
+            bot_message = '⬇️Список всех ваших напоминаний:⬇️\n\n'
             for reminder in reminders:
-                chats = reminder.get("chats_names_active", [])
+                chats = reminder.get('chats_names_active', [])
                 if chats:
                     chats_str = ', '.join(chats)
                     status = '🟢'
                 else:
-                    chats_str = " Нет активных чатов"
+                    chats_str = ' Нет активных чатов'
                     status = '🔴'
 
                 bot_message += f'№{reminder.get("id")}:{reminder.get("name_reminder")} \n' \
@@ -227,15 +226,15 @@ async def show_reminders(message: types.Message, bot: Bot):
             await bot.send_message(message.from_user.id, bot_message)
         else:
             await bot.send_message(message.from_user.id,
-                                   "😱У вас нет созданных напоминаний.")
+                                   '😱У вас нет созданных напоминаний.')
     except Exception as e:
-        await bot.send_message(message.from_user.id, f"Произошла ошибка: {e}")
+        await bot.send_message(message.from_user.id, f'Произошла ошибка: {e}')
 
 
-@reminder_router.message(F.text == "🗑 Удалить напоминание")
+@reminder_router.message(F.text == '🗑 Удалить напоминание')
 async def delete_reminder_command(message: types.Message, state: FSMContext):
     await state.set_state(ReminderForm.delete_reminder_id)
-    await message.answer("Введите ID напоминания, которое нужно удалить:")
+    await message.answer('Введите ID напоминания, которое нужно удалить:')
 
 
 @reminder_router.message(ReminderForm.delete_reminder_id)
@@ -246,33 +245,33 @@ async def handle_delete_reminder_id(message: types.Message, state: FSMContext):
         if reminder['owner_reminder_id'] == crypt(message.from_user.id):
             await api_ov_client.delete(endpoint_reminder, reminder_id)
             await message.answer(
-                f"Напоминание с ID {reminder_id} успешно "
-                f"удалено.", reply_markup=types.ReplyKeyboardRemove())
+                f'Напоминание с ID {reminder_id} успешно '
+                f'удалено.', reply_markup=types.ReplyKeyboardRemove())
             await state.clear()
         else:
-            await message.answer("Вы не являетесь владельцем этого"
-                                 " напоминания и не можете его "
-                                 "удалить.", reply_markup=EXIT_KB)
+            await message.answer('Вы не являетесь владельцем этого'
+                                 ' напоминания и не можете его '
+                                 'удалить.', reply_markup=EXIT_KB)
     except ValueError:
-        await message.answer("Вы ввели не число или не "
-                             "ваше напоминание. Повторите попытку "
-                             "или нажмите Выход", reply_markup=EXIT_KB)
+        await message.answer('Вы ввели не число или не '
+                             'ваше напоминание. Повторите попытку '
+                             'или нажмите Выход', reply_markup=EXIT_KB)
     except Exception as e:
-        await message.answer(f"Произошла "
-                             f"ошибка: {e}", reply_markup=EXIT_KB)
+        await message.answer(f'Произошла '
+                             f'ошибка: {e}', reply_markup=EXIT_KB)
 
 
-@reminder_router.message(F.text == "▶️ Запустить напоминание")
+@reminder_router.message(F.text == '▶️ Запустить напоминание')
 async def start_reminder_command(message: types.Message, state: FSMContext):
     await state.set_state(ReminderForm.start_reminder_id)
-    await message.answer("▶️ Введите ID напоминания, которое нужно запустить:")
+    await message.answer('▶️ Введите ID напоминания, которое нужно запустить:')
 
 
 @reminder_router.message(ReminderForm.start_reminder_id)
 async def handle_start_reminder_id(message: types.Message, state: FSMContext):
     try:
         reminder_id = int(message.text)
-        reminder= await api_ov_client.get(f"{endpoint_reminder}{reminder_id}/")
+        reminder= await api_ov_client.get(f'{endpoint_reminder}{reminder_id}/')
         if reminder['owner_reminder_id'] == crypt(message.from_user.id):
             chat_id = crypt(message.chat.id) + '_' + str(message.message_thread_id)
             chat_name = message.chat.title if (
@@ -287,28 +286,28 @@ async def handle_start_reminder_id(message: types.Message, state: FSMContext):
             }
             await api_ov_client.patch(endpoint_reminder, api_data, reminder_id)
 
-            await message.answer(f"▶️ Напоминание с "
-                                 f"ID {reminder_id} успешно запущено "
-                                 f"в чате {chat_name}.")
+            await message.answer(f'▶️ Напоминание с '
+                                 f'ID {reminder_id} успешно запущено '
+                                 f'в чате {chat_name}.')
             await state.clear()
         else:
-            await message.answer("Вы не являетесь владельцем "
-                                 "этого напоминания и не "
-                                 "можете его запустить.")
+            await message.answer('Вы не являетесь владельцем '
+                                 'этого напоминания и не '
+                                 'можете его запустить.')
     except ValueError:
-        await message.answer("Вы ввели не число. "
-                             "Повторите попытку.",
+        await message.answer('Вы ввели не число. '
+                             'Повторите попытку.',
                              reply_markup=EXIT_KB)
     except Exception as e:
-        await message.answer(f"Произошла "
-                             f"ошибка: {e}",
+        await message.answer(f'Произошла '
+                             f'ошибка: {e}',
                              reply_markup=EXIT_KB)
 
 
-@reminder_router.message(F.text == "⏸ Остановить напоминание")
+@reminder_router.message(F.text == '⏸ Остановить напоминание')
 async def stop_reminder_command(message: types.Message, state: FSMContext):
     await state.set_state(ReminderForm.stop_reminder_id)
-    await message.answer("⏸ Введите ID напоминания, которое нужно остановить:")
+    await message.answer('⏸ Введите ID напоминания, которое нужно остановить:')
 
 
 @reminder_router.message(ReminderForm.stop_reminder_id)
@@ -316,7 +315,7 @@ async def handle_stop_reminder_id(message: types.Message, state: FSMContext):
     try:
         reminder_id = int(message.text)
         chat_id = str(message.chat.id) + '_' + str(message.message_thread_id)
-        reminder = await api_ov_client.get(f"{endpoint_reminder}{reminder_id}/")
+        reminder = await api_ov_client.get(f'{endpoint_reminder}{reminder_id}/')
         if reminder['owner_reminder_id'] == crypt(message.from_user.id):
             chats_id_active = reminder.get('chats_id_active', [])
             chats_names_active = reminder.get('chats_names_active', [])
@@ -332,19 +331,19 @@ async def handle_stop_reminder_id(message: types.Message, state: FSMContext):
                 'chats_names_active': chats_names_active
             }
             await api_ov_client.patch(endpoint_reminder, api_data, reminder_id)
-            await message.answer(f"⏸ Напоминание с"
-                                 f" ID {reminder_id} успешно"
-                                 f" остановлено в этом чате.")
+            await message.answer(f'⏸ Напоминание с'
+                                 f' ID {reminder_id} успешно'
+                                 f' остановлено в этом чате.')
             await state.clear()
         else:
-            await message.answer("Вы не являетесь владельцем "
-                                 "этого напоминания и не "
-                                 "можете его остановить.")
+            await message.answer('Вы не являетесь владельцем '
+                                 'этого напоминания и не '
+                                 'можете его остановить.')
     except ValueError:
-        await message.answer("Вы ввели не число. "
-                             "Повторите попытку.",
+        await message.answer('Вы ввели не число. '
+                             'Повторите попытку.',
                              reply_markup=EXIT_KB)
     except Exception as e:
-        await message.answer(f"Произошла "
-                             f"ошибка: {e}",
+        await message.answer(f'Произошла '
+                             f'ошибка: {e}',
                              reply_markup=EXIT_KB)

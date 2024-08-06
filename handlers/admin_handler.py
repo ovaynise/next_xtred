@@ -24,18 +24,18 @@ async def set_level(message: types.Message):
         command_parts = message.text.split()
         if len(command_parts) != 2:
             await message.answer(
-                "Пожалуйста, укажите корректный уровень "
-                "(от 1 до 15). Пример: /setlevel 5")
+                'Пожалуйста, укажите корректный уровень '
+                '(от 1 до 15). Пример: /setlevel 5')
             return
 
         new_level = int(command_parts[1])
         if new_level < 1 or new_level > 15:
-            await message.answer("Уровень должен быть в диапазоне от 1 до 15.")
+            await message.answer('Уровень должен быть в диапазоне от 1 до 15.')
             return
     except (IndexError, ValueError):
         await message.answer(
-            "Пожалуйста, укажите корректный уровень (от 1 до 15). "
-            "Пример: /setlevel 5")
+            'Пожалуйста, укажите корректный уровень (от 1 до 15).'
+            'Пример: /setlevel 5')
         return
 
     user_id = message.from_user.id
@@ -51,6 +51,6 @@ async def set_level(message: types.Message):
                                                         new_level)
     if success:
         await message.answer(
-            f"Уровень пользователя успешно обновлен до {new_level}.")
+            f'Уровень пользователя успешно обновлен до {new_level}.')
     else:
         await message.answer(response_message)

@@ -9,7 +9,7 @@ from inits.logger import db_logger
 load_dotenv(find_dotenv())
 
 
-def crypt(text, SALT = os.getenv("SALT")):
+def crypt(text, SALT = os.getenv('SALT')):
     text = str(text)
     text_bytes = text.encode('utf-8')
     salt_bytes = SALT.encode('utf-8')
@@ -27,20 +27,20 @@ async def add_super_user_on_bd(user_hash_id):
                 db_logger.debug(f'Супер Пользователь успешно найден в БД')
                 return
         api_data = {
-            "tg_user_id": user_hash_id,
-            "tg_first_name": 'super_user',
-            "tg_last_name": 'super_user',
-            "tg_user_name": 'super_user',
-            "ban_status": False,
-            "level": 0
+            'tg_user_id': user_hash_id,
+            'tg_first_name': 'super_user',
+            'tg_last_name': 'super_user',
+            'tg_user_name': 'super_user',
+            'ban_status': False,
+            'level': 0
         }
         await api_ov_client.post(endpoint_tg_users, api_data)
         db_logger.debug(f'Супер Пользователь! Успешно зарегистрирован!')
     except ValueError:
-        db_logger.error("Произошла ошибка при обработке ID пользователя.")
+        db_logger.error('Произошла ошибка при обработке ID пользователя.')
     except KeyError:
-        db_logger.error("Произошла ошибка при доступе к данным пользователя.")
+        db_logger.error('Произошла ошибка при доступе к данным пользователя.')
     except Exception as e:
-        db_logger.error(f"Произошла ошибка: {e}")
-        print(f"Unexpected error: {e}")
+        db_logger.error(f'Произошла ошибка: {e}')
+
 

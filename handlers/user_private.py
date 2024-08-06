@@ -12,7 +12,7 @@ from filters.chat_types import (
 user_private_router = Router()
 common_filters = [
     ChatTypesFilter(['private']),
-    UserLevelFilter(0, 15, "IsAuthUser")
+    UserLevelFilter(0, 15, 'IsAuthUser')
 ]
 
 

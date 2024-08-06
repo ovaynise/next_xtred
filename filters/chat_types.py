@@ -16,7 +16,7 @@ def log_filter_result(
         filter_name: str,
         result: bool,
         user_level: int = None):
-    status = "🟡" if result else "🔴"
+    status = '🟡' if result else '🔴'
     user_info = (f'Пользователь @{username} ({user_firstname}) в чате '
                  f'{chat_title} ({chat_type}).')
     level_info = f' Уровень пользователя {user_level}.' \
@@ -32,7 +32,7 @@ def security_filters(router: Router, command: str, *filters: Filter):
     def decorator(handler: Callable):
         @wraps(handler)
         async def wrapper(message: types.Message):
-            username = message.from_user.username or "неизвестен"
+            username = message.from_user.username or 'неизвестен'
             user_firstname = message.from_user.first_name
             chat_title = message.chat.title or f'личный чат ({message.chat.id})'
             user_id = message.from_user.id
@@ -83,7 +83,7 @@ class ChatTypesFilter(Filter):
             user_firstname,
             chat_title,
             message.chat.type,
-            "ChatTypesFilter", result
+            'ChatTypesFilter', result
         )
         return result
 
@@ -158,7 +158,7 @@ group_and_private_router = Router()
 common_filters = [
     ChatTypesFilter(['group', 'supergroup', 'channel', 'private']),
     IsAnonymousUser(),
-    UserLevelFilter(0, 15, "IsAuthUser")
+    UserLevelFilter(0, 15, 'IsAuthUser')
 ]
 
 

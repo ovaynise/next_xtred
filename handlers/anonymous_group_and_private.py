@@ -24,7 +24,7 @@ common_filters = [
 async def start(message: types.Message):
     try:
         user_response = await api_ov_client.get(
-            f"{endpoint_tg_users}?tg_user_id={crypt(message.from_user.id)}"
+            f'{endpoint_tg_users}?tg_user_id={crypt(message.from_user.id)}'
         )
         if user_response['count'] > 0:
             user_in_bd = user_response['results'][0]['tg_user_id']
@@ -33,24 +33,23 @@ async def start(message: types.Message):
                                      f'нельзя регистрироваться повторно!')
                 return
         api_data = {
-            "tg_user_id": crypt(message.from_user.id),
-            "tg_first_name": message.from_user.first_name,
-            "tg_last_name": message.from_user.last_name,
-            "tg_user_name": message.from_user.username,
-            "ban_status": False,
-            "level": 15
+            'tg_user_id': crypt(message.from_user.id),
+            'tg_first_name': message.from_user.first_name,
+            'tg_last_name': message.from_user.last_name,
+            'tg_user_name': message.from_user.username,
+            'ban_status': False,
+            'level': 15
         }
         await api_ov_client.post(endpoint_tg_users, api_data)
         await message.answer(f'Привет, @{message.from_user.username}! '
                              f'Вы успешно зарегистрированы')
     except ValueError:
-        await message.answer("Произошла ошибка при обработке ID пользователя.")
+        await message.answer('Произошла ошибка при обработке ID пользователя.')
     except KeyError:
-        await message.answer("Произошла ошибка при доступе к данным "
-                             "пользователя.")
+        await message.answer('Произошла ошибка при доступе к данным '
+                             'пользователя.')
     except Exception as e:
-        await message.answer(f"Произошла ошибка: {e}")
-        print(f"Unexpected error: {e}")
+        await message.answer(f'Произошла ошибка: {e}')
 
 
 @security_filters(
@@ -62,7 +61,7 @@ async def show_status(message: types.Message):
     try:
         tg_user_id = crypt(message.from_user.id)
         user_response = await api_ov_client.get(
-            f"{endpoint_tg_users}?tg_user_id={tg_user_id}"
+            f'{endpoint_tg_users}?tg_user_id={tg_user_id}'
         )
         if user_response['count'] == 0:
             level_rang = get_level_rang(16)
@@ -76,12 +75,11 @@ async def show_status(message: types.Message):
         await message.answer(f'Ваш уровень: {level_rang}')
     except ValueError:
         await message.answer(
-            "Произошла ошибка при обработке ID пользователя."
+            'Произошла ошибка при обработке ID пользователя.'
         )
     except KeyError:
         await message.answer(
-            "Произошла ошибка при доступе к данным пользователя."
+            'Произошла ошибка при доступе к данным пользователя.'
         )
     except Exception as e:
         await message.answer(f"Произошла ошибка: {e}")
-        print(f"Unexpected error: {e}")

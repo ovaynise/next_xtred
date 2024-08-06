@@ -5,7 +5,7 @@ load_dotenv(find_dotenv())
 
 TELEGRAM_GROUP_ID = int(os.getenv('TELEGRAM_GROUP_ID'))
 BEARER_TOKEN = os.getenv('BEARER_TOKEN')
-BOT_TOKEN = os.getenv("BOT_TOKEN")
+BOT_TOKEN = os.getenv('BOT_TOKEN')
 
 CMC_API_KEY = os.getenv('CMC_API_KEY')
 crypto_url = os.getenv('CRYPTO_URL')
@@ -57,13 +57,7 @@ crypto_headers = {
   'X-CMC_PRO_API_KEY': CMC_API_KEY,
 }
 
-CITIES = {'Минск': [53.842316, 27.695950],
-          'Санкт-Петербург': [59.881547, 30.320921],
-          'Москва': [55.755864, 37.617698],
-          'Казань': [55.796127, 49.106414],
-          'Калининград': [54.691372, 20.525057],
-          'Астана': [51.128201, 71.430429],
-          }
+CITIES = {'Минск': [53.842316, 27.695950],}
 
 
 

@@ -1,1 +1,2 @@
-# next_xtred
+# next_xtred_bot
+aiogram

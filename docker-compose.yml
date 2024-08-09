@@ -16,9 +16,10 @@ services:
       POSTGRES_PORT: 5432
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      URL_SERVER_API: ${URL_SERVER_API_DOCKER}  # Переопределение переменной для докер
     networks:
-      - ovaynise_network
+      - ovaynisenetwork
 
 networks:
-  ovaynise_network:
+  ovaynisenetwork:
     external: true
